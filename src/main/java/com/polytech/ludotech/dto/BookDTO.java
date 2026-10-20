@@ -1,6 +1,6 @@
 package com.polytech.ludotech.dto;
 
-import com.polytech.ludotech.entity.BookStatus;
+import com.polytech.ludotech.entity.Status;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,5 +19,5 @@ public class BookDTO {
     private String author;
     private int year;
     private String genre;
-    private BookStatus status;
+    private Status status;
 }

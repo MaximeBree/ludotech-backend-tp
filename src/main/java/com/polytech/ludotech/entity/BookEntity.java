@@ -42,5 +42,5 @@ public class BookEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private BookStatus status;
+    private Status status;
 }

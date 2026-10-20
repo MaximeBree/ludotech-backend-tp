@@ -1,6 +1,6 @@
 package com.polytech.ludotech.entity;
 
-public enum BookStatus {
+public enum Status {
     AVAILABLE,
     BORROWED
 }

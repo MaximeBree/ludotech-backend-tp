@@ -5,6 +5,7 @@
     xsi:schemaLocation="
         http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.21.xsd">
+
     <changeSet id="002_create_table_book" author="Maxime">
         <preConditions onFail="MARK_RAN">
             <not><tableExists tableName="book"/></not>

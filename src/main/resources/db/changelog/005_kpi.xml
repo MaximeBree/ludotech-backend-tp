@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.21.xsd">
+
+    <changeSet id="011_create_table_kpi" author="Maxime">
+        <preConditions onFail="MARK_RAN">
+            <not><tableExists tableName="kpi"/></not>
+        </preConditions>
+        <createTable tableName="kpi">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="nb_livre_emprunte" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nb_livre_dispo" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nb_film_emprunte" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nb_film_dispo" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nb_jeu_emprunte" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nb_jeu_dispo" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="012_kpi_defaults" author="Maxime">
+        <addDefaultValue tableName="kpi" columnName="id" defaultValueComputed="gen_random_uuid()"/>
+    </changeSet>
+
+    <changeSet id="013_kpi_init" author="Maxime">
+        <!-- marchait pas sans enfin la db etait déjà pleine -->
+        <sql>
+            INSERT INTO kpi (nb_livre_emprunte, nb_livre_dispo, nb_film_emprunte, nb_film_dispo, nb_jeu_emprunte, nb_jeu_dispo)
+            SELECT
+                (SELECT COUNT(*) FROM book WHERE status = 'BORROWED'),
+                (SELECT COUNT(*) FROM book WHERE status = 'AVAILABLE'),
+                (SELECT COUNT(*) FROM movie WHERE status = 'BORROWED'),
+                (SELECT COUNT(*) FROM movie WHERE status = 'AVAILABLE'),
+                (SELECT COUNT(*) FROM game WHERE status = 'BORROWED'),
+                (SELECT COUNT(*) FROM game WHERE status = 'AVAILABLE');
+        </sql>
+    </changeSet>
+</databaseChangeLog>

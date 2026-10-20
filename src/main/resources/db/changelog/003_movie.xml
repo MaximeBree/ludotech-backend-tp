@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.21.xsd">
+
+    <changeSet id="005_create_table_movie" author="Maxime">
+        <preConditions onFail="MARK_RAN">
+            <not><tableExists tableName="movie"/></not>
+        </preConditions>
+        <createTable tableName="movie">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="director" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="duration" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="genre" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(9)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="006_movie_status_check" author="Maxime">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM information_schema.table_constraints
+                WHERE table_name = 'movie' AND constraint_name = 'chk_movie_status'
+            </sqlCheck>
+        </preConditions>
+        <sql>
+            ALTER TABLE movie ADD CONSTRAINT chk_movie_status CHECK (status IN ('AVAILABLE', 'BORROWED'));
+        </sql>
+    </changeSet>
+
+    <changeSet id="007_movie_defaults" author="Maxime">
+        <addDefaultValue tableName="movie" columnName="id" defaultValueComputed="gen_random_uuid()"/>
+        <addDefaultValue tableName="movie" columnName="status" defaultValue="AVAILABLE"/>
+    </changeSet>
+</databaseChangeLog>

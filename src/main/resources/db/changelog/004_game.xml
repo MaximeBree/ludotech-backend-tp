@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.21.xsd">
+
+    <changeSet id="008_create_table_game" author="Maxime">
+        <preConditions onFail="MARK_RAN">
+            <not><tableExists tableName="game"/></not>
+        </preConditions>
+        <createTable tableName="game">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="time" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="number_players" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(9)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="009_game_status_check" author="Maxime">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM information_schema.table_constraints
+                WHERE table_name = 'game' AND constraint_name = 'chk_game_status'
+            </sqlCheck>
+        </preConditions>
+        <sql>
+            ALTER TABLE game ADD CONSTRAINT chk_game_status CHECK (status IN ('AVAILABLE', 'BORROWED'));
+        </sql>
+    </changeSet>
+
+    <changeSet id="010_game_defaults" author="Maxime">
+        <addDefaultValue tableName="game" columnName="id" defaultValueComputed="gen_random_uuid()"/>
+        <addDefaultValue tableName="game" columnName="status" defaultValue="AVAILABLE"/>
+    </changeSet>
+</databaseChangeLog>

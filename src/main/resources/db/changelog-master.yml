@@ -8,3 +8,12 @@ databaseChangeLog:
   - include:
       file: changelog/002_book_year_to_int.xml
       relativeToChangelogFile: true
+  - include:
+      file: changelog/003_movie.xml
+      relativeToChangelogFile: true
+  - include:
+      file: changelog/004_game.xml
+      relativeToChangelogFile: true
+  - include:
+      file: changelog/005_kpi.xml
+      relativeToChangelogFile: true
